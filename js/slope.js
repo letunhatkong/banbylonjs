@@ -84,10 +84,12 @@ const BBL = {
         this.createWoodBar(0.3, 6, 0.2, -4.85, 3, 0);
         this.createWoodBar(0.3, 6, 0.2, -4.85, 3, -2);
 
-        this.createWoodBar(10, 0.2, 0.3, 0, 6, -3.9); // floor: ground w
+        this.createWoodBar(10, 0.2, 0.3, 0, 6, -3.9); // floor 1: ground w
         this.createWoodBar(10, 0.2, 0.3, 0, 6, 3.9);
-        this.createWoodBar(0.3, 0.2, 8, 4.85, 6, 0); // floor: ground h
+        this.createWoodBar(0.3, 0.2, 8, 4.85, 6, 0); // floor 1: ground h
         this.createWoodBar(0.3, 0.2, 8, -4.85, 6, 0);
+
+        this.createWoodBar(10, 0.2, 0.3, 0, 8, -3.9); // floor 2
     }
 
 }
