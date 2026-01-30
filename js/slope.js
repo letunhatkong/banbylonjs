@@ -33,6 +33,7 @@ const BBL = {
         const ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 10, height: 8, depth: 0.1}, this.scene);
         const groundMaterial = new BABYLON.StandardMaterial("ground", this.scene);
         groundMaterial.diffuseColor = new BABYLON.Color3(0.84, 0.84, 0.84); // gray
+        groundMaterial.backFaceCulling = false; // render in back side
         ground.material = groundMaterial;
     },
     initsScene() {
@@ -41,6 +42,8 @@ const BBL = {
         this.lightSetup();
         this.groundSetup();
         this.woodBarInit();
+        this.wallInit();
+
         return this.scene;
     },
     lightSetup() {
@@ -90,7 +93,75 @@ const BBL = {
         this.createWoodBar(0.3, 0.2, 8, -4.85, 6, 0);
 
         this.createWoodBar(10, 0.2, 0.3, 0, 8, -3.9); // floor 2
-    }
+    },
+
+    createWall(w, h, d, x = 0, y = 0, z = 0) {
+        const wallMaterial = new BABYLON.StandardMaterial("wallMat", this.scene);
+        wallMaterial.diffuseColor = new BABYLON.Color3(2.32, 2.3, 2.3);
+        wallMaterial.backFaceCulling = false; // render in back side
+        const wall = BABYLON.MeshBuilder.CreateBox("wall", {
+            width: w,
+            height: h,
+            depth: d
+        }, this.scene);
+        wall.position.x = x;
+        wall.position.y = y;
+        wall.position.z = z;
+        wall.material = wallMaterial;
+    },
+
+    createTriangleWall(a = 4, b = 3, x = 0, y = 0, z= 0, rotateY = null) {
+        const positions = [
+            0, 0, 0,   // (0,0)
+            a, 0, 0,   // X
+            0, b, 0    // Y
+        ];
+
+        // indices: create triangle
+        const indices = [0, 1, 2];
+
+        // custom mesh
+        const customMesh = new BABYLON.Mesh("triangleWall", this.scene);
+        const vertexData = new BABYLON.VertexData();
+        vertexData.positions = positions;
+        vertexData.indices = indices;
+
+        // Light
+        BABYLON.VertexData.ComputeNormals(positions, indices, vertexData.normals = []);
+        vertexData.applyToMesh(customMesh);
+
+        // Material
+        const wallMaterial = new BABYLON.StandardMaterial("wallMat", this.scene);
+        wallMaterial.diffuseColor = new BABYLON.Color3(2.32, 2.3, 2.3);
+        wallMaterial.backFaceCulling = false;
+        customMesh.material = wallMaterial;
+
+        customMesh.position.x = x;
+        customMesh.position.y = y;
+        customMesh.position.z = z;
+
+        // Rotate
+        if (rotateY !== null) customMesh.rotation.y = rotateY;
+
+        return customMesh;
+    },
+
+    creteCustomWall() {
+
+    },
+
+
+
+    wallInit() {
+        this.createWall(10, 8.2, 0.02, 0, 4, -4.05); // back
+        this.createWall(10, 6.2, 0.02, 0, 3, 4.05); // front
+        this.createWall(0.02, 6.2, 8, -5, 3, 0); // left
+        this.createWall(0.02, 6.2, 8, 5, 3, 0); // right
+
+        this.createTriangleWall(8, 2.1, 5.05, 6.07, -4, (Math.PI / -2)); // left
+        this.createTriangleWall(8, 2.1, -5.05, 6.07, -4, (Math.PI / -2)); // right
+
+    },
 
 }
 
